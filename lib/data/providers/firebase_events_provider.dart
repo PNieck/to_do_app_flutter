@@ -112,10 +112,13 @@ class FirebaseEventsProvider {
     ]);
   }
 
-  //Future<CalendarEvent> getEvent(String id) {}
+  Future<void> updateBaseEventData(
+      Map<String, dynamic> updatedEventData) async {
+    await baseColRef.doc(updatedEventData["id"]).set(updatedEventData);
+  }
 
-  Future<void> updateEvent(CalendarEvent event) {
-    // TODO: implement updateEvent
-    throw UnimplementedError();
+  Future<void> updateAdditionalEventData(
+      Map<String, dynamic> updatedEventData, String eventID) async {
+    await additionalColRef.doc(eventID).set(updatedEventData);
   }
 }

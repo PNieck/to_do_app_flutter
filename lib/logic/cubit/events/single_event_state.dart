@@ -17,6 +17,8 @@ class SingleEventCreatedSuccessfully extends SingleEventState {}
 
 class SingleEventDeletedSuccessfully extends SingleEventState {}
 
+class SingleEventUpdatedSuccessfully extends SingleEventState {}
+
 class SingleEventError extends SingleEventState {
   final String? errorMsg;
 

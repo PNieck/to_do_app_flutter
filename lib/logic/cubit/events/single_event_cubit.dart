@@ -64,6 +64,23 @@ class SingleEventCubit extends Cubit<SingleEventState> {
     }
   }
 
+  Future<void> updateEvent(
+      CalendarEvent updatedEvent, CalendarEvent oldEvent) async {
+    emit(SingleEventLoading());
+
+    if (!_isDataBaseAccess()) {
+      return;
+    }
+
+    try {
+      await eventsRepository!.updateEvent(updatedEvent, oldEvent);
+
+      emit(SingleEventUpdatedSuccessfully());
+    } catch (e) {
+      emit(SingleEventError(errorMsg: e.toString()));
+    }
+  }
+
   Future<void> deleteEvent(String eventID) async {
     emit(SingleEventLoading());
 

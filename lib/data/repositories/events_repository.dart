@@ -25,6 +25,31 @@ class EventsRepository {
     await provider.createEvent(data, additionalData);
   }
 
+  Future<void> updateEvent(
+      CalendarEvent updatedEvent, CalendarEvent oldEvent) async {
+    List<Future<void>> jobs = [];
+
+    if (oldEvent.description != updatedEvent.description) {
+      Map<String, dynamic> additionalData = {
+        "description": updatedEvent.description
+      };
+
+      jobs.add(provider.updateAdditionalEventData(additionalData, oldEvent.id));
+    }
+
+    if (oldEvent.name != updatedEvent.name ||
+        !oldEvent.startDateTime.isAtSameMomentAs(updatedEvent.startDateTime) ||
+        oldEvent.duration.compareTo(updatedEvent.duration) != 0 ||
+        oldEvent.category != updatedEvent.category) {
+      Map<String, dynamic> baseData = updatedEvent.serialize();
+      baseData.remove("description");
+
+      jobs.add(provider.updateBaseEventData(baseData));
+    }
+
+    await Future.wait(jobs);
+  }
+
   Future<void> deleteEvent(String eventID) async {
     await provider.deleteEvent(eventID);
   }

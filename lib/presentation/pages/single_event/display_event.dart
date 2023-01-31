@@ -103,7 +103,9 @@ class _DisplaySingleEventState extends State<DisplaySingleEvent> {
           bottom: 20,
           right: 20,
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              context.go("/event/${widget.event.id}/edit");
+            },
             child: const Icon(Icons.edit),
           ),
         ),

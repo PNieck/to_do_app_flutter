@@ -9,6 +9,7 @@ class AppTextFormField extends TextFormField {
     super.controller,
     super.validator,
     super.maxLines,
+    super.initialValue,
     String? labelText,
   }) : super(
           decoration: InputDecoration(
