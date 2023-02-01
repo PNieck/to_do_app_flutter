@@ -45,7 +45,7 @@ class EnforceSignInPage extends StatelessWidget {
                     ),
                     const Spacer(flex: 1),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => context.go("/sign_up"),
                       child: const Text("Sign up"),
                     ),
                     const Spacer(flex: 2),

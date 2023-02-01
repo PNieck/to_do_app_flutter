@@ -15,26 +15,33 @@ class EventsChangeCubit extends Cubit<EventsChangeState> {
   late final StreamSubscription? _additionalDataSubscription;
 
   EventsChangeCubit(this._loginCubit) : super(EventsChanged()) {
-    _loginStreamSubscription = _loginCubit.stream.listen((state) {
-      if (state is LoggedIn) {
-        var docRef =
-            FirebaseFirestore.instance.collection("users").doc(state.user.id);
+    _baseDataSubscription = null;
+    _additionalDataSubscription = null;
 
-        _baseDataSubscription =
-            docRef.collection("baseEventData").snapshots().listen((event) {
-          emit(EventsChanged());
-        });
-        _additionalDataSubscription = docRef
-            .collection("additionalEventData")
-            .snapshots()
-            .listen((event) {
-          emit(EventsChanged());
-        });
-      } else {
-        _clearBaseSub();
-        _clearAdditionalSub();
-      }
+    _loginStreamSubscription = _loginCubit.stream.listen((state) {
+      _loginListener(state);
     });
+
+    _loginListener(_loginCubit.state);
+  }
+
+  void _loginListener(LoginState state) {
+    if (state is LoggedIn) {
+      var docRef =
+          FirebaseFirestore.instance.collection("users").doc(state.user.id);
+
+      _baseDataSubscription =
+          docRef.collection("baseEventData").snapshots().listen((event) {
+        emit(EventsChanged());
+      });
+      _additionalDataSubscription =
+          docRef.collection("additionalEventData").snapshots().listen((event) {
+        emit(EventsChanged());
+      });
+    } else {
+      _clearBaseSub();
+      _clearAdditionalSub();
+    }
   }
 
   void _clearBaseSub() {

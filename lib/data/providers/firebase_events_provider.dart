@@ -42,11 +42,6 @@ class FirebaseEventsProvider {
     return result;
   }
 
-  Future<List<CalendarEvent>> getEventsFromTo(DateTime from, DateTime to) {
-    // TODO: implement getEventsFromTo
-    throw UnimplementedError();
-  }
-
   Future<Map<String, dynamic>> readEvent(String eventId) async {
     List<DocumentSnapshot<Map<String, dynamic>>> data = await Future.wait([
       baseColRef.doc(eventId).get(),
@@ -66,8 +61,8 @@ class FirebaseEventsProvider {
 
   Future<List<Map<String, dynamic>>> getCategoryEvents(
       String categoryID) async {
-    QuerySnapshot<Map<String, dynamic>> snap = await baseColRef
-        .where("category", arrayContains: {"id": categoryID}).get();
+    QuerySnapshot<Map<String, dynamic>> snap =
+        await baseColRef.where("category.id", isEqualTo: categoryID).get();
 
     List<Map<String, dynamic>> result = [];
     for (var doc in snap.docs) {

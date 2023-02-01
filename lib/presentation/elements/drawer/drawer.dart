@@ -87,6 +87,10 @@ class _CompleteDrawerState extends State<CompleteDrawer> {
 
             return ListTile(
               title: Text(category.name),
+              onTap: () {
+                context.go("/category/${widget.categories[index - 4].id}");
+                Navigator.pop(context);
+              },
               onLongPress: () => showCategoryMenu(context, category),
             );
           }

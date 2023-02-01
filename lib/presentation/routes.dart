@@ -5,11 +5,13 @@ import 'package:to_do_app_flutter/logic/cubit/categories/categories_cubit.dart';
 import 'package:to_do_app_flutter/logic/cubit/events/events_change_cubit.dart';
 import 'package:to_do_app_flutter/logic/cubit/login/login_cubit.dart';
 import 'package:to_do_app_flutter/presentation/elements/drawer/drawer.dart';
+import 'package:to_do_app_flutter/presentation/pages/category_page/category_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/edit_event.dart/edit_event.dart';
 import 'package:to_do_app_flutter/presentation/pages/email_verify_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/new_event/new_event_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/enforce_sign_in_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/profile_page.dart';
+import 'package:to_do_app_flutter/presentation/pages/register_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/sign_in_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/single_event/single_event_page.dart';
 import 'pages/todays_events/todays_events_page.dart';
@@ -69,11 +71,26 @@ class AppRouter {
                     path: "profile",
                     builder: (context, state) => const ProfilePage(),
                   ),
+                  GoRoute(
+                      path: "category/:categoryID",
+                      builder: (context, state) =>
+                          CategoryPage(categoryID: state.params["categoryID"]!),
+                      routes: [
+                        GoRoute(
+                          path: "event/:eventID",
+                          builder: (context, state) => SingleEventPage(
+                              eventID: state.params["eventID"]!),
+                        )
+                      ]),
                 ]),
             GoRoute(
               path: "/sign_in",
               builder: (context, state) => const AppSignInPage(),
             ),
+            GoRoute(
+              path: "/sign_up",
+              builder: (context, state) => const RegisterPage(),
+            )
           ])
     ],
   );
