@@ -26,6 +26,7 @@ class FirebaseEventsProvider {
         .where("startDateTime",
             isGreaterThanOrEqualTo: startDateTime,
             isLessThanOrEqualTo: endDateTime)
+        .orderBy("startDateTime")
         .get();
 
     List<Map<String, dynamic>> result = [];
@@ -61,15 +62,21 @@ class FirebaseEventsProvider {
 
   Future<List<Map<String, dynamic>>> getCategoryEvents(
       String categoryID) async {
-    QuerySnapshot<Map<String, dynamic>> snap =
-        await baseColRef.where("category.id", isEqualTo: categoryID).get();
+    QuerySnapshot<Map<String, dynamic>> snap = await baseColRef
+        .where("category.id", isEqualTo: categoryID)
+        //.orderBy("startDateTime")
+        .get();
 
-    List<Map<String, dynamic>> result = [];
-    for (var doc in snap.docs) {
-      result.add(doc.data());
-    }
+    return List.generate(snap.docs.length, (index) => snap.docs[index].data());
+  }
 
-    return result;
+  Future<List<Map<String, dynamic>>> getEventsWithoutCategory() async {
+    QuerySnapshot<Map<String, dynamic>> snap = await baseColRef
+        .where("category", isEqualTo: null)
+        //.orderBy("startDateTime")
+        .get();
+
+    return List.generate(snap.docs.length, (index) => snap.docs[index].data());
   }
 
   Future<List<Map<String, dynamic>>> getEventsFromDateRange(
@@ -82,6 +89,7 @@ class FirebaseEventsProvider {
     QuerySnapshot<Map<String, dynamic>> snap = await baseColRef
         .where("startDateTime",
             isGreaterThanOrEqualTo: fromDate, isLessThanOrEqualTo: toDate)
+        .orderBy("startDateTime")
         .get();
 
     return List.generate(snap.docs.length, (index) => snap.docs[index].data());

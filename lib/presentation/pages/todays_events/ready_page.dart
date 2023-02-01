@@ -123,7 +123,7 @@ class _TodayReadyPageState extends State<TodayReadyPage> {
             ),
             alignment: Alignment.center,
             child: Text(
-              TimeOfDay.fromDateTime(nowDateTime).format(context),
+              nowDateTime.formatTime(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.white,

@@ -48,10 +48,25 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
       List<EventCategory> data = await repo.readCategories();
       emit(CategoriesReady(data));
+      return;
     }
 
     emit(CategoriesError());
   }
 
-  void deleteCategory(EventCategory category) => emit(CategoriesLoading());
+  Future<void> deleteCategory(String categoryID) async {
+    emit(CategoriesLoading());
+    LoginState loginState = loginCubit.state;
+
+    if (loginState is LoggedIn) {
+      CategoriesRepository repo = CategoriesRepository(loginState.user);
+      await repo.deleteCategory(categoryID);
+
+      List<EventCategory> data = await repo.readCategories();
+      emit(CategoriesReady(data));
+      return;
+    }
+
+    emit(CategoriesError());
+  }
 }

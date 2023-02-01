@@ -50,3 +50,5 @@ class CategoryCollectionType extends EventsCollectionType {
 
   CategoryCollectionType(this.category);
 }
+
+class EventsWithoutCategoryCollectionType extends EventsCollectionType {}

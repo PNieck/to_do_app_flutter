@@ -1,7 +1,10 @@
+import 'package:to_do_app_flutter/data/models/base_calendar_events.dart';
 import 'package:to_do_app_flutter/data/models/calendar_event.dart';
 import 'package:to_do_app_flutter/data/models/event_category.dart';
 import 'package:to_do_app_flutter/data/models/user.dart';
 import 'package:to_do_app_flutter/data/providers/firebase_categories_provider.dart';
+import 'package:to_do_app_flutter/data/repositories/events_repository.dart';
+import 'package:tuple/tuple.dart';
 
 class CategoriesRepository {
   final AppUser user;
@@ -37,5 +40,24 @@ class CategoriesRepository {
     Map<String, Object> data = category.serialize();
 
     await provider.updateCategory(data);
+  }
+
+  Future<void> deleteCategory(String categoryID) async {
+    EventsRepository eventsRepo = EventsRepository(user);
+
+    Tuple2<List<BaseCalendarEvent>, EventCategory> events =
+        await eventsRepo.readCategoryEvents(categoryID);
+
+    if (events.item1.isNotEmpty) {
+      List<Future<void>> jobs = <Future<void>>[];
+      for (var event in events.item1) {
+        event.category = null;
+        jobs.add(eventsRepo.updateBaseEvent(event));
+      }
+
+      await Future.wait(jobs);
+    }
+
+    provider.deleteCategory(categoryID);
   }
 }

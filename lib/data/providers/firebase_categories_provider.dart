@@ -54,4 +54,13 @@ class FirebaseCategoriesProvider {
         .doc(categoryData["id"].toString())
         .set(categoryData);
   }
+
+  Future<void> deleteCategory(String categoryID) async {
+    await db
+        .collection("users")
+        .doc(user.id)
+        .collection("eventCategories")
+        .doc(categoryID)
+        .delete();
+  }
 }

@@ -6,6 +6,7 @@ import 'package:to_do_app_flutter/logic/cubit/events/events_change_cubit.dart';
 import 'package:to_do_app_flutter/logic/cubit/login/login_cubit.dart';
 import 'package:to_do_app_flutter/presentation/elements/drawer/drawer.dart';
 import 'package:to_do_app_flutter/presentation/pages/category_page/category_page.dart';
+import 'package:to_do_app_flutter/presentation/pages/default_category_page.dart/defualt_category_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/edit_event.dart/edit_event.dart';
 import 'package:to_do_app_flutter/presentation/pages/email_verify_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/new_event/new_event_page.dart';
@@ -80,8 +81,18 @@ class AppRouter {
                           path: "event/:eventID",
                           builder: (context, state) => SingleEventPage(
                               eventID: state.params["eventID"]!),
-                        )
+                        ),
                       ]),
+                  GoRoute(
+                      path: "default_category",
+                      builder: (context, state) => const DefaultCategoryPage(),
+                      routes: [
+                        GoRoute(
+                          path: "event/:eventID",
+                          builder: (context, state) => SingleEventPage(
+                              eventID: state.params["eventID"]!),
+                        ),
+                      ])
                 ]),
             GoRoute(
               path: "/sign_in",

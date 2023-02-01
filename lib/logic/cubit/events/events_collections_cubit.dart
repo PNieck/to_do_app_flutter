@@ -54,6 +54,24 @@ class EventsCollectionsCubit extends Cubit<EventsCollectionsState> {
     }
   }
 
+  Future<void> readEventsWithoutCategory() async {
+    emit(EventsCollectionLoading());
+
+    if (!_isDataBaseAccess()) {
+      return;
+    }
+
+    try {
+      List<BaseCalendarEvent> events =
+          await eventsRepository!.readEventsWithoutCategory();
+
+      emit(
+          EventsCollectionReady(events, EventsWithoutCategoryCollectionType()));
+    } catch (e) {
+      emit(EventsCollectionsError(errorMsg: e.toString()));
+    }
+  }
+
   Future<void> readEventsFromDateRange(
       DateTime startDate, DateTime endDate) async {
     emit(EventsCollectionLoading());

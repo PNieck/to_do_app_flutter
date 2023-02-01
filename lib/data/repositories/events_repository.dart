@@ -50,6 +50,12 @@ class EventsRepository {
     await Future.wait(jobs);
   }
 
+  Future<void> updateBaseEvent(BaseCalendarEvent updatedEvent) async {
+    Map<String, dynamic> baseData = updatedEvent.serialize();
+
+    await provider.updateBaseEventData(baseData);
+  }
+
   Future<void> deleteEvent(String eventID) async {
     await provider.deleteEvent(eventID);
   }
@@ -91,6 +97,13 @@ class EventsRepository {
     }
 
     return Tuple2(events, category);
+  }
+
+  Future<List<BaseCalendarEvent>> readEventsWithoutCategory() async {
+    List<Map<String, dynamic>> rawData =
+        await provider.getEventsWithoutCategory();
+
+    return _deserializeRawData(rawData);
   }
 
   List<BaseCalendarEvent> _deserializeRawData(

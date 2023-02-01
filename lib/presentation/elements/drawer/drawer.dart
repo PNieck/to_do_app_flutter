@@ -32,7 +32,6 @@ class _AppDrawerState extends State<AppDrawer> {
           );
         }
         if (state is CategoriesError) {
-          // #TODO
           return const WaitingDrawer();
         } else {
           context.read<CategoriesCubit>().readCategories();
@@ -77,9 +76,13 @@ class _CompleteDrawerState extends State<CompleteDrawer> {
             return const Divider();
           }
           if (index == 3) {
-            return const ListTile(
-              leading: Icon(Icons.done),
-              title: Text("Default"),
+            return ListTile(
+              leading: const Icon(Icons.done),
+              title: const Text("Default"),
+              onTap: () {
+                Navigator.pop(context);
+                context.go("/default_category");
+              },
             );
           }
           if (index > 3 && index < widget.categories.length + 4) {
@@ -140,6 +143,10 @@ class _CompleteDrawerState extends State<CompleteDrawer> {
           );
         },
       );
+    }
+
+    if (result == CategoryMenuResult.delete) {
+      await context.read<CategoriesCubit>().deleteCategory(category.id);
     }
   }
 }

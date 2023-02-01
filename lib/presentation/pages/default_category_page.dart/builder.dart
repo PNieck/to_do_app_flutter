@@ -5,36 +5,33 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app_flutter/logic/cubit/events/events_collections_cubit.dart';
 import 'package:to_do_app_flutter/presentation/pages/category_events_list.dart';
+import 'package:to_do_app_flutter/presentation/pages/category_page/category_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/error_page.dart';
 import 'package:to_do_app_flutter/presentation/pages/loading_page.dart';
 
 import '../../../logic/cubit/events/events_change_cubit.dart';
 
-class CategoryPageBuilder extends StatefulWidget {
-  final String categoryID;
-
-  const CategoryPageBuilder({required this.categoryID, super.key});
+class DefaultCategoryPageBuilder extends StatefulWidget {
+  const DefaultCategoryPageBuilder({super.key});
 
   @override
-  State<CategoryPageBuilder> createState() => _CategoryPageBuilderState();
+  State<DefaultCategoryPageBuilder> createState() =>
+      _DefaultCategoryPageBuilderState();
 }
 
-class _CategoryPageBuilderState extends State<CategoryPageBuilder> {
+class _DefaultCategoryPageBuilderState
+    extends State<DefaultCategoryPageBuilder> {
   late final StreamSubscription collectionChangedSub;
 
   @override
   void initState() {
     super.initState();
 
-    context
-        .read<EventsCollectionsCubit>()
-        .readEventsFromCategory(widget.categoryID);
+    context.read<EventsCollectionsCubit>().readEventsWithoutCategory();
     collectionChangedSub =
         context.read<EventsChangeCubit>().stream.listen((state) {
       if (state is EventsChanged) {
-        context
-            .read<EventsCollectionsCubit>()
-            .readEventsFromCategory(widget.categoryID);
+        context.read<EventsCollectionsCubit>().readEventsWithoutCategory();
       }
     });
   }
@@ -50,11 +47,8 @@ class _CategoryPageBuilderState extends State<CategoryPageBuilder> {
 
         if (state is EventsCollectionReady) {
           EventsCollectionType collectionType = state.collectionType;
-          if (collectionType is CategoryCollectionType) {
-            if (collectionType.category.id == widget.categoryID) {
-              return CategoryEventsList(
-                  events: state.events, category: collectionType.category);
-            }
+          if (collectionType is EventsWithoutCategoryCollectionType) {
+            return CategoryEventsList(events: state.events);
           }
 
           return const ErrorPage(errorMessage: "Invalid collection loaded");
@@ -70,18 +64,14 @@ class _CategoryPageBuilderState extends State<CategoryPageBuilder> {
   }
 
   @override
-  void didUpdateWidget(covariant CategoryPageBuilder oldWidget) {
+  void didUpdateWidget(covariant DefaultCategoryPageBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     EventsCollectionsState state = context.read<EventsCollectionsCubit>().state;
     if (state is EventsCollectionReady) {
       EventsCollectionType collectionType = state.collectionType;
-      if (collectionType is! CategoryCollectionType ||
-          collectionType.category.id != widget.categoryID) {
-        context
-            .read<EventsCollectionsCubit>()
-            .readEventsFromCategory(widget.categoryID);
-      }
+      if (collectionType is! EventsWithoutCategoryCollectionType) {}
+      context.read<EventsCollectionsCubit>().readEventsWithoutCategory();
     }
   }
 

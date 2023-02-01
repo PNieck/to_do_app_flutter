@@ -39,7 +39,7 @@ class _CategoryMenuPopUpState extends State<CategoryMenuPopUp> {
         SimpleDialogOption(
           child: const Text("Delete"),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, CategoryMenuResult.delete);
           },
         )
       ],
