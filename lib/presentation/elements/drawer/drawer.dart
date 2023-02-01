@@ -201,12 +201,15 @@ class LoggedInHeader extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              user.name == null || user.name!.isEmpty
-                  ? "Logged as ${user.email}"
-                  : "Logged as ${user.name!}",
-              maxLines: 4,
-              overflow: TextOverflow.clip,
+            Container(
+              constraints: const BoxConstraints(maxWidth: 200),
+              child: Text(
+                user.name == null || user.name!.isEmpty
+                    ? "Logged as ${user.email}"
+                    : "Logged as ${user.name!}",
+                maxLines: 4,
+                overflow: TextOverflow.clip,
+              ),
             ),
             TextButton(
               onPressed: () {
